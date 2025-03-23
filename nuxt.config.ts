@@ -1,18 +1,14 @@
+import { defineNuxtConfig } from 'nuxt/config';
+import { resolve } from 'path';
+
 export default defineNuxtConfig({
+  // Extend the WooNuxt base theme
+  extends: [resolve(__dirname, './woonuxt_base')],
 
-  // Get all the pages, components, composables and plugins from the parent theme
-  extends: ['./woonuxt_base'],
+  // Ensure custom components are detected
+  components: [{ path: './app/components', pathPrefix: false }],
 
-  components: [{ path: './components', pathPrefix: false }],
-
-  /**
-   * Depending on your servers capabilities, you may need to adjust the following settings.
-   * It will affect the build time but also increase the reliability of the build process.
-   * If you have a server with a lot of memory and CPU, you can remove the following settings.
-   * @property {number} concurrency - How many pages to prerender at once
-   * @property {number} interval - How long to wait between prerendering pages
-   * @property {boolean} failOnError - This stops the build from failing but the page will not be statically generated
-   */
+  // Nitro settings (adjust based on server capability)
   nitro: {
     prerender: {
       concurrency: 10,
@@ -20,4 +16,11 @@ export default defineNuxtConfig({
       failOnError: false,
     },
   },
+
+  // Debugging: Log if Nuxt is loading the correct layers
+  hooks: {
+    'ready': (nuxt) => {
+      console.log('✅ Loaded layers:', nuxt.options._layers);
+    }
+  }
 });
